@@ -1,0 +1,22 @@
+#heading {
+  font-size: 2rem;
+  margin: 0px;
+  padding-bottom: 0.5rem;
+}
+
+#subheading {
+  font-size: 1rem;
+  margin: 0px;
+  font-weight: 400;
+}
+
+.search-bar {
+  padding: 1rem;
+  /* when you give margin or padding two values, it's `y, x` - so, y margin of 1rem, x padding of 0 */
+  margin: 1rem 0;
+  background: beige;
+}
+
+#search-input {
+  margin-right: 0.5rem;
+}
