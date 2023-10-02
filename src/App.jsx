@@ -114,7 +114,7 @@ function App() {
   return (
     <div>
       <h1 id="heading">Welcome to Pinus!</h1>
-      <h2 id="subheading">(Pinus is Pokemon Linus)</h2>
+      <h2 id="subheading">(Pokemon Linus)</h2>
       <Search placeholder="look up pokemon" handleSearch={searchForPokemon} />
       {/*
           this is a common thing to do - a chunk of your app can live in its own
