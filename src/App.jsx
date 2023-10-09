@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Search from "./components/Search";
 import Pokemon from "./components/Pokemon";
+import SearchResults from "./components/SearchResults";
+import { cleanedUpPokemonData } from "./lib/pokemonUtils";
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
@@ -24,17 +26,20 @@ function App() {
     fetch(pokemonToLookUp.url)
       .then((res) => res.json())
       .then((res) => {
-        setPokemon(pokemon.concat(res));
+        // we never mutate the state object directly!
+        //we use setPokemon and give it a copy of the array (`concat` doesn't mutate the array)
+        const pokemonData = cleanedUpPokemonData(res);
+        setPokemon(pokemon.concat(pokemonData));
       });
   }
 
   function searchForPokemon(query) {
     /*
       This is a little different than Linus.
-      There are only 1292 pokemon in total, so rather than asking the server to search by query,
-      We'll only query for the first 251 pokemon, which covers Generation I and II.
-      we get the whole list of pokemon, and return only the pokemon that match.
-      A pokemon matches the query if its name contains the query (ex: 'Pikachu' contains 'ach')
+      There are only 1292 pokemon in Gen I and II.
+      So rather than asking the server to search by query, we'll get all the first 251 pokemon.
+      Then we filter it down to only return pokemon that match.
+      A pokemon matches the query if its name contains the query (ex: 'Pikachu' contains 'kach')
 
       The API doesn't need auth, so you can see the raw response by navigating to https://pokeapi.co/api/v2/pokemon?limit=251
     */
@@ -55,42 +60,6 @@ function App() {
         console.log(matches);
         setSearchResults(matches);
       });
-  }
-
-  function renderSearchResults() {
-    /*
-      Arrow functions are common for map/filter
-      Note the `key` attribute on the <p>.
-      Anytime we map, react need us to give every item in the list an ID (so it could re-render the list quicky)
-      Otherwise, you'll see a console error. This is a common thing to miss.
-      The key should be any unique property. In our case, every pokemon will have a different name.
-    */
-    const pokemonSearchResults = searchResults.map((pokemon) => {
-      return (
-        // note the `() => getDataForOnePokemon(pokemon.url)`
-        // if we just did `getDataForOnePokemon(pokemon.url)`, the function would run immediately, not onClick
-
-        // finally, this is gonna look like a link, even though it's not - check the CSS!
-        <p
-          key={pokemon.name}
-          onClick={() => getDataForOnePokemon(pokemon)}
-          className="search-result"
-        >
-          {pokemon.name}
-        </p>
-      );
-    });
-
-    return (
-      <div className="card">
-        <h4>Search results:</h4>
-        {/*
-          this is a common thing to do - a chunk of your component can live in its own
-          return function or variable, as long as they return JSX (which is "react HTML")
-        */}
-        {pokemonSearchResults}
-      </div>
-    );
   }
 
   function renderPokemon() {
@@ -115,12 +84,15 @@ function App() {
     <div>
       <h1 id="heading">Welcome to Pinus!</h1>
       <h2 id="subheading">(Pokemon Linus)</h2>
-      <Search placeholder="look up pokemon" handleSearch={searchForPokemon} />
       {/*
           this is a common thing to do - a chunk of your app can live in its own
           return function or variable, as long as they return JSX (which is "react HTML")
         */}
-      {renderSearchResults()}
+      <Search placeholder="look up pokemon" handleSearch={searchForPokemon} />
+      <SearchResults
+        pokemon={searchResults}
+        handleSearch={getDataForOnePokemon}
+      />
       {renderPokemon()}
     </div>
   );

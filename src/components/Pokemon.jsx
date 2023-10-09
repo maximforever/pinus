@@ -9,7 +9,7 @@ export default function Pokemon({ pokemon }) {
     return pokemon.stats.map((stats) => {
       return (
         <span>
-          {stats.stat.name}: {stats.base_stat}
+          {stats.name}: {stats.value}
         </span>
       );
     });
@@ -17,7 +17,7 @@ export default function Pokemon({ pokemon }) {
 
   return (
     <div className="card">
-      <img src={pokemon.sprites.front_default} />
+      <img src={pokemon.avatar} />
       <h4 className="pokemon-name">{pokemon.name}</h4>
       <div className="stats-wrapper">{renderStats()}</div>
     </div>
