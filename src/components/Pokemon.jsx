@@ -1,9 +1,3 @@
-/*
-  Components take props objects, so you could also define this as `Pokemon(props)` where props is an object
-  that looks like {pokemon: <pokemonObject>}.
-  Then you'd call props.pokemon
-  We're `destructuring` pokemon from props - this is a common pattern
- */
 export default function Pokemon({ pokemon }) {
   function renderStats() {
     return pokemon.stats.map((stats) => {
